@@ -147,12 +147,12 @@ export default {
       env.restMongoUrl + "/reviews/" + serie.drupal_internal__nid
     );
     //console.log('nid', '/vote/serie/result/' + serie.nid + '?_format=json')
-    let serieScore = await voteResult(serie.drupal_internal__nid);
-    if (serieScore.length > 1) {
-      serieScore = serieScore[1].value[0].value;
-    } else {
-      serieScore = 0;
-    }
+    //let serieScore = await voteResult(serie.drupal_internal__nid);
+    //if (serieScore.length > 1) {
+    //  serieScore = serieScore[1].value[0].value;
+    //} else {
+    const serieScore = 0;
+    //}
     return { serie, episodes };
   },
 };

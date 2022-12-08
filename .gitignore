@@ -82,3 +82,4 @@ dist
 
 nuxt.config.js
 yarn.lock
+package.lock
