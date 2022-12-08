@@ -81,3 +81,4 @@ dist
 .idea
 
 nuxt.config.js
+yarn.lock
