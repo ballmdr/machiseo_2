@@ -3,21 +3,37 @@
     <div class="hero is-medium is-info">
       <div class="hero-body">
         <div class="columns">
-          <div class="column is-one-quarter">
-            <img :src="cdnUrl + serie.field_poster[0].uri.url" />
+          <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img :src="cdnUrl + serie.field_poster[0].uri.url" :alt="serie.title" />
+                </figure>
+              </div>
+            </div>
           </div>
           <div class="column">
-            <p class="hero-title">{{ serie.title }}</p>
+            <h1 class="title">{{ serie.title }}</h1>
+            <p class="block">{{ serie.field_synopsis }}</p>
+            <div class="columns">
+              <div
+                class="column is-one-quarter"
+                v-for="(celeb, index) in serie.field_celeb"
+              >
+                <figure class="image is-96x96">
+                  <img
+                    :src="cdnUrl + celeb.field_celeb_profile.uri.url"
+                    class="is-rounded"
+                  />
+                </figure>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="container is-fullhd">
-        <div class="columns">
-          <div
-            class="column is-one-third"
-            v-for="(ep, index) of episodes"
-            @click="openEP(index)"
-          >
+      <div>
+        <b-carousel-list :data="episodes" :items-to-show="4">
+          <template #item="ep">
             <div class="card">
               <div class="card-image">
                 <figure class="image">
@@ -28,12 +44,14 @@
                 </figure>
               </div>
               <div class="card-content">
-                <h4 class="title">สปอยล์ {{ serie.title }} ตอนที่ {{ ep.title }}</h4>
+                <h5 class="title is-5" style="color: black">
+                  สปอยล์ {{ serie.title }} ตอนที่ {{ ep.title }}
+                </h5>
                 <p class="content" v-html="trunc_txt(ep.body.processed)"></p>
               </div>
             </div>
-          </div>
-        </div>
+          </template>
+        </b-carousel-list>
       </div>
     </div>
     <div class="container">
@@ -50,12 +68,6 @@
                 <div v-html="serie.body.processed"></div>
               </div>
             </div>
-            <b-image
-              src="https://picsum.photos/600/400"
-              alt="A random image"
-              ratio="6by4"
-              rounded="rounded"
-            ></b-image>
           </div>
         </div>
         <div class="column is-half">
@@ -65,7 +77,7 @@
         </div>
         <div class="column">
           <div class="side-stick">
-            <div class="box"><img src="https://picsum.photos/320/300" /></div>
+            <div class="box"><img src="https://picsum.photos/320/600" /></div>
           </div>
         </div>
       </div>
@@ -114,7 +126,7 @@ export default {
       }
     },
     trunc_txt(txt) {
-      return txt.substring(0, 100) + "...";
+      return txt.substring(0, 75) + "...";
     },
     openEP(index) {
       this.ep_modal_thumbnail = this.episodes[index].field_thumbnail.uri.url;
@@ -123,7 +135,7 @@ export default {
     },
   },
   mounted() {
-    //onsole.log(this.episodes)
+    console.log("serie", this.serie);
   },
   async asyncData({ app, params, env }) {
     const uri = env.findRouterPath + "/series/" + params.title;
