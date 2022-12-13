@@ -10,7 +10,6 @@
         <a class="navbar-item" href="/">
           <img src="~assets/buefy.png" alt="Buefy" height="28" />
         </a>
-
         <div class="navbar-burger">
           <span />
           <span />
@@ -19,10 +18,7 @@
       </div>
     </b-navbar>
 
-    <section
-      class="main-content columns container is-max-widescreen"
-      style="padding: 12px"
-    >
+    <section>
       <nuxt />
     </section>
   </div>
@@ -45,5 +41,8 @@ export default {
 .side-stick {
   position: sticky;
   top: 50px;
+}
+body {
+  background-color: #f5f5f7;
 }
 </style>

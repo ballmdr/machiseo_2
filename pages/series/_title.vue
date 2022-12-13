@@ -1,53 +1,73 @@
 <template>
-  <div class="columns">
-    <aside class="column">
-      <div class="card side-stick">
-        <div class="card-image">
-          <figure class="image">
-            <img :src="cdnUrl + serie.field_poster[0].uri.url" alt="Placeholder image" />
-          </figure>
-        </div>
-        <div class="card-content">
-          <div class="content">
-            <div v-html="serie.body.processed"></div>
+  <div>
+    <div class="hero is-medium is-info">
+      <div class="hero-body">
+        <div class="columns">
+          <div class="column is-one-quarter">
+            <img :src="cdnUrl + serie.field_poster[0].uri.url" />
+          </div>
+          <div class="column">
+            <p class="hero-title">{{ serie.title }}</p>
           </div>
         </div>
-        <b-image
-          src="https://picsum.photos/600/400"
-          alt="A random image"
-          ratio="6by4"
-          rounded="rounded"
-        ></b-image>
       </div>
-    </aside>
-    <div class="column is-half">
-      <div
-        class="card"
-        v-for="(ep, index) of episodes"
-        style="margin-top: 20px"
-        @click="openEP(index)"
-      >
-        <div class="card-image">
-          <figure class="image">
-            <img :src="cdnUrl + ep.field_thumbnail.uri.url" alt="Image" />
-          </figure>
-          <div class="card-content">
-            <h4 class="subtitle tag is-primary">
-              สปอยล์ {{ serie.title }} ตอนที่ {{ ep.title }}
-            </h4>
-            <p class="content" v-html="trunc_txt(ep.body.processed)"></p>
+      <div class="container is-fullhd">
+        <div class="columns">
+          <div
+            class="column is-one-third"
+            v-for="(ep, index) of episodes"
+            @click="openEP(index)"
+          >
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img
+                    :src="cdnUrl + ep.field_thumbnail.uri.url"
+                    :alt="serie.title + ep.title"
+                  />
+                </figure>
+              </div>
+              <div class="card-content">
+                <h4 class="title">สปอยล์ {{ serie.title }} ตอนที่ {{ ep.title }}</h4>
+                <p class="content" v-html="trunc_txt(ep.body.processed)"></p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="column">
-      <div class="box side-stick">
-        <b-image
-          src="https://picsum.photos/600/400"
-          alt="A random image"
-          ratio="6by4"
-          :rounded="rounded"
-        ></b-image>
+    <div class="container">
+      <div class="columns">
+        <div class="column">
+          <div class="card side-stick">
+            <div class="card-image">
+              <figure class="image">
+                <img :src="cdnUrl + serie.field_poster[0].uri.url" :alt="serie.title" />
+              </figure>
+            </div>
+            <div class="card-content">
+              <div class="content">
+                <div v-html="serie.body.processed"></div>
+              </div>
+            </div>
+            <b-image
+              src="https://picsum.photos/600/400"
+              alt="A random image"
+              ratio="6by4"
+              rounded="rounded"
+            ></b-image>
+          </div>
+        </div>
+        <div class="column is-half">
+          <div class="box" v-for="(review, index) of reviews">
+            <review-card :review="review" v-if="review.user.length > 0"></review-card>
+          </div>
+        </div>
+        <div class="column">
+          <div class="side-stick">
+            <div class="box"><img src="https://picsum.photos/320/300" /></div>
+          </div>
+        </div>
       </div>
     </div>
     <b-modal v-model="isCardModalActive" :width="640" scroll="keep">
@@ -70,9 +90,10 @@
 <script>
 import { getSerieByPath, getEpisodesBySerie } from "~/assets/js/api";
 import jsonapiParse from "jsonapi-parse";
+import ReviewCard from "~/components/reviews/ReviewCard";
 
 export default {
-  components: {},
+  components: { ReviewCard },
   data() {
     return {
       isAdmin: null,
@@ -85,7 +106,6 @@ export default {
   },
   methods: {
     checkUrl(url) {
-      console.log(url);
       const link = url.split("://");
       if (link[0] !== "https") {
         return process.env.cdnUrl + url;
@@ -94,7 +114,6 @@ export default {
       }
     },
     trunc_txt(txt) {
-      console.log(txt);
       return txt.substring(0, 100) + "...";
     },
     openEP(index) {
@@ -138,11 +157,8 @@ export default {
       serie.id +
       "&include=field_thumbnail,field_series_korea&sort=-nid";
 
-    //console.log(url2);
     const data2 = await app.$axios.get(url2);
     const episodes = data2.data.data;
-    //console.log(episodes);
-
     const reviews = await app.$axios.$get(
       env.restMongoUrl + "/reviews/" + serie.drupal_internal__nid
     );
@@ -153,44 +169,18 @@ export default {
     //} else {
     const serieScore = 0;
     //}
-    return { serie, episodes };
+    console.log("reviews  ", reviews);
+    return { serie, episodes, reviews };
   },
 };
 </script>
 <style scoped>
-.logo_subthai {
-  max-width: 75px !important;
-}
-
-.u-clearfix:before,
-.u-clearfix:after {
-  content: " ";
-  display: table;
-}
-
-.u-clearfix:after {
-  clear: both;
-}
-
-.u-clearfix {
-  *zoom: 1;
-}
-
-.container {
-  margin: auto;
-  width: 100%;
-}
-
-.card-media {
-  padding: 0 0 25px 25px;
-  width: 300px;
-}
-
-.card-media-img {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin-top: 50px;
-  width: 100%;
-  border-radius: 12px;
-  margin-left: 10px;
+.hero {
+  background-image: linear-gradient(
+    to right,
+    rgba(31.5, 31.5, 31.5, 1) calc((50vw - 170px) - 340px),
+    rgba(31.5, 31.5, 31.5, 0.84) 30%,
+    rgba(31.5, 31.5, 31.5, 0.84) 100%
+  );
 }
 </style>
