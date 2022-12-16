@@ -1,42 +1,91 @@
 <template>
   <div>
     <div class="hero is-medium is-info">
-      <div class="hero-body">
-        <div class="columns">
-          <div class="column is-one-third">
-            <div class="card">
-              <div class="card-image">
-                <figure class="image">
-                  <img :src="cdnUrl + serie.field_poster[0].uri.url" :alt="serie.title" />
-                </figure>
+      <div class="container is-fullhd">
+        <div class="hero-body" style="padding-bottom: 10px !important">
+          <div class="columns">
+            <div class="column is-one-third">
+              <div class="card" style="max-width: 250px; margin: auto">
+                <div class="card-image">
+                  <figure class="image">
+                    <img
+                      :src="cdnUrl + serie.field_poster[0].uri.url"
+                      :alt="serie.title"
+                    />
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <div class="column">
+              <h1 class="title">{{ serie.title }}</h1>
+              <p class="block">{{ serie.field_synopsis }}</p>
+              <div class="columns">
+                <div class="column is-one-fifth" v-if="serie.field_viu !== null">
+                  <b-image src="/viu.png" class="stream_icon" />
+                </div>
+                <div class="column is-one-fifth" v-if="serie.field_netflix !== null">
+                  <b-image src="/netflix.png" class="stream_icon" />
+                </div>
+                <div class="column is-one-fifth" v-if="serie.field_disney !== null">
+                  <b-image src="/disney.png" class="stream_icon" />
+                </div>
+                <div class="column is-one-fifth" v-if="serie.field_prime !== null">
+                  <b-image src="/prime.png" class="stream_icon" />
+                </div>
+                <div class="column is-one-fifth" v-if="serie.field_wetv !== null">
+                  <b-image src="/wetv.png" class="stream_icon" />
+                </div>
+                <div class="column is-one-fifth" v-if="serie.field_iqiyi !== null">
+                  <b-image src="/iqiyi.png" class="stream_icon" />
+                </div>
               </div>
             </div>
           </div>
-          <div class="column">
-            <h1 class="title">{{ serie.title }}</h1>
-            <p class="block">{{ serie.field_synopsis }}</p>
-            <div class="columns">
-              <div
-                class="column is-one-quarter"
-                v-for="(celeb, index) in serie.field_celeb"
-              >
-                <figure class="image is-96x96">
-                  <img
-                    :src="cdnUrl + celeb.field_celeb_profile.uri.url"
-                    class="is-rounded"
-                  />
-                </figure>
+          <hr />
+          <div style="margin-bottom: 50px; text-align: center">
+            <h2 class="subtitle">นักแสดงนำ {{ serie.title }}</h2>
+          </div>
+          <div class="columns">
+            <div
+              class="block column is-full-mobile is-one-half-tablet is-one-thirds-desktop"
+              v-for="(celeb, index) in serie.field_celeb"
+            >
+              <div class="card" style="">
+                <div class="card-image">
+                  <div class="media">
+                    <div class="media-left">
+                      <b-image
+                        :src="cdnUrl + celeb.field_celeb_profile.uri.url"
+                        class="is-128x128"
+                        ratio="1by1"
+                      ></b-image>
+                    </div>
+                    <div class="media-content">
+                      <div class="content">
+                        <p
+                          class="subtitle"
+                          style="color: black !important; margin-top: 10px !important"
+                          v-html="CelebTitle(celeb.title)"
+                        ></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <hr />
         </div>
       </div>
       <div>
-        <b-carousel-list :data="episodes" :items-to-show="4">
+        <div style="text-align: center; margin-bottom: 50px">
+          <h2 class="subtitle">สปอยล์ {{ serie.title }} ทุกตอน</h2>
+        </div>
+        <b-carousel-list :data="episodes">
           <template #item="ep">
-            <div class="card">
+            <div class="card" style="max-height: 400px; overflow: hidden">
               <div class="card-image">
-                <figure class="image">
+                <figure class="image" @click="openEP(ep.index)">
                   <img
                     :src="cdnUrl + ep.field_thumbnail.uri.url"
                     :alt="serie.title + ep.title"
@@ -44,10 +93,12 @@
                 </figure>
               </div>
               <div class="card-content">
-                <h5 class="title is-5" style="color: black">
-                  สปอยล์ {{ serie.title }} ตอนที่ {{ ep.title }}
-                </h5>
-                <p class="content" v-html="trunc_txt(ep.body.processed)"></p>
+                <h5 class="title is-5" style="color: black">ตอนที่ {{ ep.title }}</h5>
+                <p
+                  class="content"
+                  style="margin-top: -20px !important"
+                  v-html="trunc_txt(ep.body.processed)"
+                ></p>
               </div>
             </div>
           </template>
@@ -90,6 +141,9 @@
           </figure>
         </div>
         <div class="card-content">
+          <div class="media-content">
+            <p class="title is-4">John Smith</p>
+          </div>
           <div class="content">
             <div v-html="ep_modal_txt"></div>
           </div>
@@ -125,8 +179,12 @@ export default {
         return url;
       }
     },
+    CelebTitle(txt) {
+      const tmp = txt.split("(");
+      return tmp[0] + "<br/>(" + tmp[1];
+    },
     trunc_txt(txt) {
-      return txt.substring(0, 75) + "...";
+      return txt.substring(0, 85) + "...";
     },
     openEP(index) {
       this.ep_modal_thumbnail = this.episodes[index].field_thumbnail.uri.url;
@@ -194,5 +252,8 @@ export default {
     rgba(31.5, 31.5, 31.5, 0.84) 30%,
     rgba(31.5, 31.5, 31.5, 0.84) 100%
   );
+}
+.stream_icon {
+  max-width: 70px !important;
 }
 </style>
