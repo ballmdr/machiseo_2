@@ -1,9 +1,12 @@
 <template>
   <article class="media">
     <div class="media-left">
-      <figure class="image is-64x64">
-        <img :src="review.user[0].picture" alt="Image" />
-      </figure>
+      <b-image
+        class="is-64x64"
+        :src="review.user[0].picture"
+        ratio="1by1"
+        rounded="true"
+      ></b-image>
     </div>
     <div class="media-content">
       <div class="content">
@@ -33,6 +36,14 @@ export default {
     //console.log(this.review);
   },
   methods: {
+    showAvatar(pic) {
+      var img = new Image();
+      if (img.height != 0) {
+        return pic;
+      } else {
+        return "https://cdn.pixabay.com/photo/2016/03/31/14/47/avatar-1292817_960_720.png";
+      }
+    },
     isInArray(value, array) {
       return array.indexOf(value) > -1;
     },
