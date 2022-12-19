@@ -137,9 +137,9 @@
         </div>
         <div class="card-content">
           <div class="media-content">
-            <p class="title is-4">John Smith</p>
+            <p class="title is-4">{{ serie.title }} ตอนที่ {{ ep_title }}</p>
           </div>
-          <div class="content">
+          <div class="content" style="padding-top: 15px">
             <div v-html="ep_modal_txt"></div>
           </div>
         </div>
@@ -163,6 +163,7 @@ export default {
       isCardModalActive: false,
       ep_modal_thumbnail: "",
       ep_modal_txt: "",
+      ep_title: "",
       al: {
         breakpoints: {
           320: {
@@ -198,6 +199,7 @@ export default {
       this.ep_modal_thumbnail = this.episodes[index].field_thumbnail.uri.url;
       this.ep_modal_txt = this.episodes[index].body.processed;
       this.isCardModalActive = true;
+      this.ep_title = this.episodes[index].title;
     },
   },
   mounted() {
