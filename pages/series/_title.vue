@@ -5,16 +5,11 @@
         <div class="hero-body" style="padding-bottom: 10px !important">
           <div class="columns">
             <div class="column is-one-third">
-              <div class="card" style="max-width: 250px; margin: auto">
-                <div class="card-image">
-                  <figure class="image">
-                    <img
-                      :src="cdnUrl + serie.field_poster[0].uri.url"
-                      :alt="serie.title"
-                    />
-                  </figure>
-                </div>
-              </div>
+              <b-image
+                class="poster"
+                :src="cdnUrl + serie.field_poster[0].uri.url"
+                :alt="serie.title"
+              ></b-image>
             </div>
             <div class="column">
               <h1 class="title">{{ serie.title }}</h1>
@@ -45,12 +40,12 @@
           <div style="margin-bottom: 50px; text-align: center">
             <h2 class="subtitle">นักแสดงนำ {{ serie.title }}</h2>
           </div>
-          <div class="columns">
+          <div class="columns is-multiline is-centered">
             <div
-              class="block column is-full-mobile is-one-half-tablet is-one-thirds-desktop"
+              class="block column is-full-mobile is-half-tablet id-one-thirds-desktop is-one-quarter-fullhd"
               v-for="(celeb, index) in serie.field_celeb"
             >
-              <div class="card" style="">
+              <div class="card">
                 <div class="card-image">
                   <div class="media">
                     <div class="media-left">
@@ -61,7 +56,7 @@
                       ></b-image>
                     </div>
                     <div class="media-content">
-                      <div class="content">
+                      <div class="content" style="padding-top: 18px; text-align: center">
                         <p
                           class="subtitle"
                           style="color: black !important; margin-top: 10px !important"
@@ -81,7 +76,7 @@
         <div style="text-align: center; margin-bottom: 50px">
           <h2 class="subtitle">สปอยล์ {{ serie.title }} ทุกตอน</h2>
         </div>
-        <b-carousel-list :data="episodes">
+        <b-carousel-list :data="episodes" v-bind="al">
           <template #item="ep">
             <div class="card" style="max-height: 400px; overflow: hidden">
               <div class="card-image">
@@ -105,7 +100,7 @@
         </b-carousel-list>
       </div>
     </div>
-    <div class="container">
+    <div class="container" style="margin-top: 20px">
       <div class="columns">
         <div class="column">
           <div class="card side-stick">
@@ -168,6 +163,19 @@ export default {
       isCardModalActive: false,
       ep_modal_thumbnail: "",
       ep_modal_txt: "",
+      al: {
+        breakpoints: {
+          320: {
+            itemsToShow: 2,
+          },
+          768: {
+            itemsToShow: 4,
+          },
+          960: {
+            itemsToShow: 6,
+          },
+        },
+      },
     };
   },
   methods: {
@@ -246,14 +254,18 @@ export default {
 </script>
 <style scoped>
 .hero {
-  background-image: linear-gradient(
-    to right,
-    rgba(31.5, 31.5, 31.5, 1) calc((50vw - 170px) - 340px),
-    rgba(31.5, 31.5, 31.5, 0.84) 30%,
-    rgba(31.5, 31.5, 31.5, 0.84) 100%
-  );
+  background-image: linear-gradient(180deg, #14181c, #14181c, #2c3440);
 }
 .stream_icon {
   max-width: 70px !important;
+}
+
+.poster {
+  margin: auto;
+  border: 0.05rem solid;
+  max-width: 250px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(221, 238, 255, 0.35);
+  box-sizing: border-box;
 }
 </style>
