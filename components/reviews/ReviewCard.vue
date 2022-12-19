@@ -1,23 +1,31 @@
 <template>
-  <article class="media">
-    <div class="media-left">
-      <b-image
-        class="is-64x64"
-        :src="review.user[0].picture"
-        ratio="1by1"
-        rounded="true"
-      ></b-image>
-    </div>
-    <div class="media-content">
+  <div class="card box" style="padding: 0.5rem !important" v-if="review.user.length > 0">
+    <div class="card-content">
+      <div class="media">
+        <div class="media-left">
+          <b-image
+            class="is-64x64"
+            :src="review.user[0].picture"
+            ratio="1by1"
+            :rounded="true"
+          ></b-image>
+        </div>
+        <div class="media-content">
+          <p class="title is-4" style="margin-bottom: 5px">{{ review.user[0].name }}</p>
+          <b-rate
+            v-model="review.score"
+            :show-score="false"
+            :show-text="true"
+            :texts="rate_text"
+          >
+          </b-rate>
+        </div>
+      </div>
       <div class="content">
-        <p>
-          <strong>{{ review.user[0].name }}</strong>
-          <br />
-          <span v-html="review.review_text"></span>
-        </p>
+        <span v-html="review.review_text"></span>
       </div>
     </div>
-  </article>
+  </div>
 </template>
 
 <script>
@@ -30,10 +38,11 @@ export default {
     return {
       currentScore: this.review.score,
       liked: false,
+      rate_text: ["แย่", "พอใช้", "ดี", "ดีมาก", "สุดยอด"],
     };
   },
   mounted() {
-    //console.log(this.review);
+    console.log(this.review);
   },
   methods: {
     showAvatar(pic) {

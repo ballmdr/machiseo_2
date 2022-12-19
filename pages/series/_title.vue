@@ -117,9 +117,10 @@
           </div>
         </div>
         <div class="column is-half">
-          <div class="box" v-for="(review, index) of reviews">
-            <review-card :review="review" v-if="review.user.length > 0"></review-card>
-          </div>
+          <h2 class="subtitle is-4" style="text-align: center">
+            รีวิวซีรีส์ {{ serie.title }}
+          </h2>
+          <reviews :reviews="reviews"></reviews>
         </div>
         <div class="column">
           <div class="side-stick">
@@ -151,10 +152,10 @@
 <script>
 import { getSerieByPath, getEpisodesBySerie } from "~/assets/js/api";
 import jsonapiParse from "jsonapi-parse";
-import ReviewCard from "~/components/reviews/ReviewCard";
+import Reviews from "~/components/reviews/Reviews";
 
 export default {
-  components: { ReviewCard },
+  components: { Reviews },
   data() {
     return {
       isAdmin: null,
